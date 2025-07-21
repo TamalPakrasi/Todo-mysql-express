@@ -1,28 +1,44 @@
 import * as todoModal from "../models/todo.model.js";
 import dataNotFound from "../utils/errors/dataNotFound.error.js";
 
-//fetch all todo service
-export const fetchAllTodoService = async () => {
-  const allTodos = await todoModal.fetchAllTodos();
-  if (allTodos.length === 0) return [];
-  return allTodos;
-};
+export default class TodoServices {
+  static async fetchTodo() {
+    const allTodos = await todoModal.fetchAllTodos();
+    if (allTodos.length === 0) return [];
+    return {
+      success: true,
+      message: "All Todos obtained",
+      data: allTodos,
+    };
+  }
 
-//create new entry
-export const createNewTodoService = async (data) => {
-  return await todoModal.addNewTodo(data);
-};
+  static async createTodo(data) {
+    const insertId = await todoModal.addNewTodo(data);
+    // return object like real-world API patterns.
+    return {
+      success: true,
+      message: "New Todo created",
+      data: insertId,
+    };
+  }
 
-//update a todo
-export const updateTodoService = async (id, newData) => {
-  const affected = await todoModal.updateTodo(id, newData);
-  if (!affected) throw dataNotFound("Failed to Update");
-  return affected;
-};
+  static async updateTodo(id, newData) {
+    const affected = await todoModal.updateTodo(id, newData);
+    if (!affected) throw dataNotFound("Failed to Update");
+    return {
+      success: true,
+      message: "Todo updated",
+      data: affected,
+    };
+  }
 
-// delete a todo
-export const deleteTodoService = async (id) => {
-  const affected = await todoModal.deleteTodo(id);
-  if (!affected) throw dataNotFound("Failed to delete");
-  return affected;
+  static async deleteTodo(id) {
+    const affected = await todoModal.deleteTodo(id);
+    if (!affected) throw dataNotFound("Failed to delete");
+    return {
+      success: true,
+      message: "Todo deleted",
+      data: affected,
+    };
+  }
 }
