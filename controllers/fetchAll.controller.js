@@ -19,7 +19,7 @@ export const createTodo = async (req, res, next) => {
   try {
     const { title, description } = req.body;
     console.log("CREATE TODO");
-    console.log(title, description);
+    console.log({ title, description });
 
     if (title.trim().length === 0 || description.trim().length === 0)
       throw new Error("Invalid Title or Description");
@@ -30,8 +30,33 @@ export const createTodo = async (req, res, next) => {
     });
 
     console.log(`operation status:\n${operationStatus}`);
-    
-    res.status(200).json({ operationStatus });
+
+    res.status(201).json({ operationStatus });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc PUT update todo
+// @route PUT /api/todos/:id
+export const updateTodo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { title, description, isCompleted } = req.body;
+    console.log("CREATE TODO");
+    console.log({
+      id,
+      title,
+      description,
+      isCompleted,
+    });
+    const operationStatus = await TodoServices.updateTodo(id, {
+      title,
+      description,
+      isCompleted: isCompleted ? "Y" : "N",
+    });
+    console.log(`operation status:\n${operationStatus}`);
+    res.status(201).json({ operationStatus });
   } catch (error) {
     next(error);
   }

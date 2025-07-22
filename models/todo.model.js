@@ -29,11 +29,11 @@ export const addNewTodo = async ({ title, description }) => {
 };
 
 //update a todo
-export const updateTodo = async (id, { title, description }) => {
+export const updateTodo = async (id, { title, description, isCompleted }) => {
   try {
     const [result] = await pool.query(
-      "UPDATE todo_table SET title = ?, description = ? WHERE id = ?",
-      [title, description, id]
+      "UPDATE todo_table SET title = ?, description = ?, isCompleted = ? WHERE id = ?",
+      [title, description, isCompleted, id]
     );
     console.log(result);
     return result.affectedRows;
