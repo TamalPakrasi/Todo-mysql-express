@@ -5,7 +5,7 @@ const error = (err, req, res, next) => {
 
   const sts = isCustom ? err.statusCode : 500;
 
-  const message = isCustom ? err.message : "Something went wrong";
+  const message = err.message.length > 0 ? err.message : "Something went wrong";
 
   console.log({
     status: sts,
