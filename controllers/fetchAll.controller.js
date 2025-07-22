@@ -4,8 +4,22 @@ import TodoServices from "../services/todo.service.js";
 // @route GET /api/todos
 export const fetchAll = async (req, res, next) => {
   try {
-    const todos = await TodoServices.fetchTodo();
-    res.status(200).json({ todos });
+    const operationStatus = await TodoServices.fetchTodo();
+    res.status(200).json({ operationStatus });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createTodo = async (req, res, next) => {
+  try {
+    const { title, description } = req.body;
+    console.log(title, description);
+    const operationStatus = await TodoServices.createTodo({
+      title,
+      description,
+    });
+    res.status(200).json({ operationStatus });
   } catch (error) {
     next(error);
   }

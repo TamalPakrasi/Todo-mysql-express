@@ -7,9 +7,12 @@ const error = (err, req, res, next) => {
 
   const message = isCustom ? err.message : "Something went wrong";
 
-  console.log(message, sts);
+  console.log({
+    status: sts,
+    message,
+  });
 
-  res.status(sts).json({ status: sts, message });
+  res.status(sts).json({ success: false, status: sts, message });
 };
 
 export default error;
