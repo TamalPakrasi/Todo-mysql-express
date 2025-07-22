@@ -5,9 +5,11 @@ import databaseError from "../utils/errors/databaseError.error.js";
 export const fetchAllTodos = async () => {
   try {
     const [allTodos] = await pool.query("SELECT * FROM todo_table");
-    console.log(allTodos);
+    console.log(`Coming from modal\n${allTodos}`);
     return allTodos;
   } catch (error) {
+    console.log(error);
+    if (error.message.length > 0) throw databaseError(error.message);
     throw databaseError();
   }
 };

@@ -4,10 +4,9 @@ import dataNotFound from "../utils/errors/dataNotFound.error.js";
 export default class TodoServices {
   static async fetchTodo() {
     const allTodos = await todoModal.fetchAllTodos();
-    if (allTodos.length === 0) return [];
     return {
       success: true,
-      message: "All Todos obtained",
+      message: allTodos.length > 0 ? "all Todos obatined" : "No Todo Obtained",
       data: allTodos,
     };
   }

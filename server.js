@@ -1,18 +1,21 @@
 import express from "express";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { publicDir } from "./utils/path/path.handler.js";
+import port from "./utils/port/port.handler.js";
+import todoRoutes from "./routes/API/todo.route.js";
+import errorMiddleware from "./middlewares/error.middleware.js";
+
 const app = express();
-const port = 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// default middlewares
+app.use(express.static(publicDir));
+app.use(express.json());
 
-app.use(express.static(join(__dirname, "public")));
+//API routes
+app.use("/api/todos", todoRoutes);
 
-app.get("/", (req, res) => {
-  res.sendFile(join(__dirname, "views", "pages", "index.html"));
-});
+//error handeling
+app.use(errorMiddleware);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+app.listen(port, () =>
+  console.log(`Server is listening at https://localhost:${port}`)
+);
