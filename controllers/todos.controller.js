@@ -50,6 +50,10 @@ export const updateTodo = async (req, res, next) => {
       description,
       isCompleted,
     });
+
+    if (title.trim().length === 0 || description.trim().length === 0)
+      throw new Error("Invalid Title or Description");
+
     const operationStatus = await TodoServices.updateTodo(id, {
       title,
       description,
