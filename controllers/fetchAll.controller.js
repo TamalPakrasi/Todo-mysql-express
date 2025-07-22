@@ -7,7 +7,7 @@ export const fetchAll = async (req, res, next) => {
     const operationStatus = await TodoServices.fetchTodo();
     console.log("FETCH ALL TODOS");
     console.log(`operation status:\n${operationStatus}`);
-    res.status(200).json({ operationStatus });
+    return res.status(200).json({ operationStatus });
   } catch (error) {
     next(error);
   }
@@ -31,7 +31,7 @@ export const createTodo = async (req, res, next) => {
 
     console.log(`operation status:\n${operationStatus}`);
 
-    res.status(201).json({ operationStatus });
+    return res.status(201).json({ operationStatus });
   } catch (error) {
     next(error);
   }
@@ -43,7 +43,7 @@ export const updateTodo = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { title, description, isCompleted } = req.body;
-    console.log("CREATE TODO");
+    console.log("UPDATE TODO");
     console.log({
       id,
       title,
@@ -56,7 +56,22 @@ export const updateTodo = async (req, res, next) => {
       isCompleted: isCompleted ? "Y" : "N",
     });
     console.log(`operation status:\n${operationStatus}`);
-    res.status(201).json({ operationStatus });
+    return res.status(201).json({ operationStatus });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc DELETE delete a todo
+// @route DELETE /api/todos/:id
+export const deleteTodo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log("DELETE A TODO");
+    console.log({ id });
+    const operationStatus = await TodoServices.deleteTodo(id);
+    console.log(`operation status:\n${operationStatus}`);
+    return res.status(200).json({ operationStatus });
   } catch (error) {
     next(error);
   }
