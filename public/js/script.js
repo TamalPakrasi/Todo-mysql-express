@@ -3,6 +3,34 @@ const todoInputDesc = document.getElementById("todo-input-desc");
 const todoForm = document.getElementById("todo-form");
 const todoList = document.getElementById("todo-list");
 
+let isEditing = false;
+
+async function startingUpdate(element) {
+  const data = {};
+  const actualId = Number(element.id.slice(2));
+  isEditing = !isEditing;
+
+  if (isEditing) {
+    document.querySelectorAll(`.todo-info-${actualId}`).forEach((info) => {
+      info.contentEditable = true;
+      info.classList.add("border", "border-dark");
+    });
+
+    element.innerText = "Save";
+  } else {
+    document.querySelectorAll(`.todo-info-${actualId}`).forEach((info) => {
+      info.contentEditable = false;
+      info.classList.remove("border", "border-dark");
+      data[info.dataset.id] = info.innerText;
+    });
+    const checkboxSts = document.getElementById(`c-${actualId}`).checked;
+    await updateTodo(actualId, { isCompleted: checkboxSts, ...data });
+    element.innerText = "Edit";
+    isEditing = false;
+  }
+
+}
+
 async function deleteTodo(id) {
   try {
     const res = await fetch(`/api/todos/${id}`, {
@@ -22,6 +50,7 @@ async function deleteTodo(id) {
 }
 
 async function updateTodo(id, data) {
+  console.log(data);
   try {
     const res = await fetch(`/api/todos/${id}`, {
       method: "PUT",
@@ -48,8 +77,8 @@ function appendToDom({ id, title, description, isCompleted }) {
     isCompleted === "Y" ? "checked" : ""
   } > 
                  <div class="col-6">
-                   <div class="mb-1">${title}</div>
-                   <div>${description}</div>
+                   <div class="mb-1 todo-info-${id}" data-id="title">${title}</div>
+                   <div class="todo-info-${id}" data-id="description">${description}</div>
                  </div>
                  <button class="btn btn-primary col-2" id="e-${id}" >Edit</button>
                  <button class="btn btn-danger col-2" id="d-${id}">Delete</button>
@@ -78,8 +107,7 @@ function appendToDom({ id, title, description, isCompleted }) {
   });
 
   document.getElementById(`e-${id}`).addEventListener("click", async (eve) => {
-    const id = Number(eve.target.id.slice(2));
-    // await startingUpdate();
+    await startingUpdate(eve.target);
   });
 }
 
@@ -93,6 +121,8 @@ async function fetchAllTodos() {
       throw new Error(json.operationStatus.message);
 
     todoList.innerHTML = "";
+
+    console.log(json.operationStatus.data);
 
     json.operationStatus.data.forEach((data) => {
       appendToDom(data);
