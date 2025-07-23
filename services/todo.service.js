@@ -11,6 +11,15 @@ export default class TodoServices {
     };
   }
 
+  static async fetchOneTodo(id) {
+    const todo = await todoModal.fetchTodoByID(id);
+    return {
+      success: true,
+      message: todo.length > 0 ? "Todo obatined" : "No Todo Obtained",
+      data: todo[0],
+    };
+  }
+
   static async createTodo(data) {
     const insertId = await todoModal.addNewTodo(data);
     // return object like real-world API patterns.

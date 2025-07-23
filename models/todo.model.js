@@ -14,6 +14,21 @@ export const fetchAllTodos = async () => {
   }
 };
 
+//fetch todo by id
+export const fetchTodoByID = async (id) => {
+  try {
+    const [todo] = await pool.query("SELECT * FROM todo_table WHERE id = ?", [
+      id,
+    ]);
+    console.log(`Coming from modal\n${todo}`);
+    return todo;
+  } catch (error) {
+    console.log(error);
+    if (error.message.length > 0) throw databaseError(error.message);
+    throw databaseError();
+  }
+};
+
 //add new todo
 export const addNewTodo = async ({ title, description }) => {
   try {

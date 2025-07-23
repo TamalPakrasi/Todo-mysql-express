@@ -13,6 +13,21 @@ export const fetchAll = async (req, res, next) => {
   }
 };
 
+// @desc GET fetch todo by id
+// @route GET /api/todos/:id
+export const fetchOneTodo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const operationStatus = await TodoServices.fetchOneTodo(id);
+    console.log("GET ONE TODO");
+    console.log(id);
+    console.log(`operation status:\n${operationStatus}`);
+    return res.status(200).json({ operationStatus });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc POST create new todo
 // @route POST /api/todos
 export const createTodo = async (req, res, next) => {
